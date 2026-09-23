@@ -2,6 +2,7 @@ interface PredictionCardProps {
   letter: string;
   confidence: number;
   isDetecting: boolean;
+  holdProgress: number;
   transcript: Array<{ sign: string; time: string }>;
   onClearTranscript: () => void;
   onSpeak: () => void;
@@ -12,6 +13,7 @@ export function PredictionCard({
   letter,
   confidence,
   isDetecting,
+  holdProgress,
   transcript,
   onClearTranscript,
   onSpeak,
@@ -31,11 +33,17 @@ export function PredictionCard({
 
         <div className="hint">
           {hasLetter
-            ? isLocked ? 'Letter locked' : 'Recognized just now'
+            ? isLocked ? 'Letter read and locked' : 'Recognized just now'
             : isDetecting
-              ? 'Show a sign to begin detecting.'
+              ? holdProgress > 0 ? `Reading sign... ${Math.ceil((1 - holdProgress) * 3)}s` : 'Hold one sign still for 3 seconds.'
               : 'Start the camera and show a sign to begin.'}
         </div>
+
+        {!hasLetter && isDetecting && holdProgress > 0 && (
+          <div className="read-progress" aria-label={`${Math.round(holdProgress * 100)} percent read`}>
+            <div className="read-progress-fill" style={{ width: `${holdProgress * 100}%` }} />
+          </div>
+        )}
 
         {/* Confidence bar */}
         {hasLetter && (

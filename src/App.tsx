@@ -13,7 +13,7 @@ import aslAlphabetGuide from './assets/asl-alphabet-guide.png';
 function App() {
   const { videoRef, isActive, status: camStatus, error: camError, startCamera, stopCamera } = useWebcam();
   const { handLandmarker, status: modelStatus, error: modelError } = useHandLandmarker();
-  const { stableLetter, stableConfidence, pushPrediction, clearBuffer, isLocked } = usePredictionBuffer(10, 0.5);
+  const { stableLetter, stableConfidence, pushPrediction, clearBuffer, isLocked, holdProgress } = usePredictionBuffer();
   const [isDetecting, setIsDetecting] = useState(false);
   const [motionStatus, setMotionStatus] = useState<MotionStatus>('static');
   const [transcript, setTranscript] = useState<Array<{ sign: string; time: string }>>([]);
@@ -77,7 +77,7 @@ function App() {
           <div className="mode-indicator">Alphabet Mode</div>
         </section>
 
-        <aside><PredictionCard letter={stableLetter} confidence={stableConfidence} isDetecting={isActive} isLocked={isLocked} transcript={transcript} onClearTranscript={handleClearTranscript} onSpeak={handleSpeak} /></aside>
+        <aside><PredictionCard letter={stableLetter} confidence={stableConfidence} isDetecting={isActive} isLocked={isLocked} holdProgress={holdProgress} transcript={transcript} onClearTranscript={handleClearTranscript} onSpeak={handleSpeak} /></aside>
       </main>
 
       <section id="how" className="how" aria-labelledby="guide-title">
