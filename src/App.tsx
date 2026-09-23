@@ -8,6 +8,7 @@ import { useHandLandmarker } from './hooks/useHandLandmarker';
 import { usePredictionBuffer } from './hooks/usePredictionBuffer';
 import type { Prediction } from './types';
 import type { MotionStatus } from './ml/motionClassifier';
+import aslAlphabetGuide from './assets/asl-alphabet-guide.png';
 
 function App() {
   const { videoRef, isActive, status: camStatus, error: camError, startCamera, stopCamera } = useWebcam();
@@ -79,7 +80,23 @@ function App() {
         <aside><PredictionCard letter={stableLetter} confidence={stableConfidence} isDetecting={isActive} isLocked={isLocked} transcript={transcript} onClearTranscript={handleClearTranscript} onSpeak={handleSpeak} /></aside>
       </main>
 
-      <section id="how" className="how"><h2>Letters this app recognizes</h2><div className="glossary">{'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter => <div className={`sign-card ${stableLetter === letter ? 'active' : ''}`} key={letter}><span className="shape">{letter}</span><span className="name">Letter {letter}</span><span className="desc">{letter === 'J' || letter === 'Z' ? 'Motion stroke' : 'Static handshape'}</span></div>)}</div><p className="glossary-note">Static letters use wrist-relative hand landmarks. J and Z use the index fingertip’s rolling motion path. Keep your hand visible and centered for the steadiest recognition.</p></section>
+      <section id="how" className="how" aria-labelledby="guide-title">
+        <div className="guide-intro">
+          <span className="eyebrow">ASL fingerspelling guide</span>
+          <h2 id="guide-title">Find the handshape for each letter</h2>
+          <p>Use this quick reference while practicing in front of the camera. The highlighted card shows the letter currently recognized.</p>
+        </div>
+        <div className="guide-key" aria-label="Guide legend">
+          <span><i className="key-dot static" />Static handshape</span>
+          <span><i className="key-dot motion" />Motion stroke</span>
+        </div>
+        <figure className="alphabet-poster">
+          <img src={aslAlphabetGuide} alt="American Sign Language alphabet poster showing the handshape for each letter from A to Z" />
+          <figcaption>Visual ASL alphabet reference. J and Z use movement.</figcaption>
+        </figure>
+        <div className="glossary">{'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter => <div className={`sign-card ${stableLetter === letter ? 'active' : ''}`} key={letter}><span className="shape">{letter}</span><span className="name">Letter {letter}</span><span className="desc">{letter === 'J' || letter === 'Z' ? 'Motion stroke' : 'Static handshape'}</span></div>)}</div>
+        <p className="glossary-note">J and Z require a moving stroke after forming the starting handshape. Keep your hand visible and centered for the steadiest recognition.</p>
+      </section>
       <footer><span>Sign2Connect — processed locally in your browser. Video is never uploaded or stored.</span><span>Built with MediaPipe Hands</span></footer>
     </div>
   );
