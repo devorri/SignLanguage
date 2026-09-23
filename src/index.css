@@ -1,0 +1,48 @@
+/* ── CSS Reset & Design System ─────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #F7F9FB;
+  --panel: #FFFFFF;
+  --ink: #1B2430;
+  --ink-soft: #5B6675;
+  --teal: #2F6F6B;
+  --teal-bright: #4FD1C5;
+  --amber: #E8A33D;
+  --line: #E1E7EA;
+  --danger: #C4573B;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: rgba(47, 111, 107, 0.2);
+  color: var(--ink);
+}
