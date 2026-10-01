@@ -12,11 +12,7 @@ export const HAND_CONNECTIONS: Array<[number, number]> = [
   [5, 9], [9, 13], [13, 17],
 ];
 
-/**
- * Draws hand skeleton on canvas matching the Sign2Connect style:
- * - Teal-bright (#4FD1C5) connections
- * - Amber (#E8A33D) landmark dots
- */
+
 export function drawHandSkeleton(
   ctx: CanvasRenderingContext2D,
   landmarks: RawLandmark[],
@@ -37,7 +33,6 @@ export function drawHandSkeleton(
     y: lm.y * height,
   }));
 
-  // Draw connections
   ctx.lineWidth = 2.5;
   ctx.strokeStyle = '#4FD1C5';
   ctx.beginPath();

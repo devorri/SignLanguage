@@ -5,23 +5,28 @@ import { normalizeLandmarks } from '../ml/normalizeLandmarks';
 import { classifyGeometric } from '../ml/geometricClassifier';
 import { MotionClassifier } from '../ml/motionClassifier';
 import { classifyWithModel, loadTfjsModel } from '../ml/tfjsClassifier';
-import type { Prediction, RawLandmark } from '../types';
+import type { AppMode, Prediction, RawLandmark } from '../types';
 
 interface WebcamFeedProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   handLandmarker: HandLandmarker | null;
   isActive: boolean;
+  mode: AppMode;
   onPrediction: (prediction: Prediction) => void;
+  onWordLandmarks: (landmarks: RawLandmark[]) => void;
   onHandLost: () => void;
   onDetectingChange: (isDetecting: boolean) => void;
   onMotionStatusChange: (status: 'static' | 'tracking' | 'recognized') => void;
 }
 
+
 export function WebcamFeed({
   videoRef,
   handLandmarker,
   isActive,
+  mode,
   onPrediction,
+  onWordLandmarks,
   onHandLost,
   onDetectingChange,
   onMotionStatusChange,
@@ -69,12 +74,17 @@ export function WebcamFeed({
         // Draw hand skeleton on canvas overlay
         drawHandSkeleton(ctx, landmarks, canvas.width, canvas.height, true);
 
-        // Normalize and classify
-        const normalized = normalizeLandmarks(landmarks, 'Right');
-        const motion = motionClassifierRef.current.update(landmarks, now);
-        onMotionStatusChange(motion.status);
-        const staticPrediction = classifyWithModel(normalized.points) ?? classifyGeometric(landmarks);
-        onPrediction(motion.prediction ?? staticPrediction);
+        if (mode === 'words') {
+          onMotionStatusChange('static');
+          onWordLandmarks(landmarks);
+        } else {
+          // Normalize and classify alphabet letter
+          const normalized = normalizeLandmarks(landmarks, 'Right');
+          const motion = motionClassifierRef.current.update(landmarks, now);
+          onMotionStatusChange(motion.status);
+          const staticPrediction = classifyWithModel(normalized.points) ?? classifyGeometric(landmarks);
+          onPrediction(motion.prediction ?? staticPrediction);
+        }
       } else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         onDetectingChange(false);
@@ -86,7 +96,8 @@ export function WebcamFeed({
     }
 
     rafIdRef.current = requestAnimationFrame(() => detectRef.current());
-  }, [handLandmarker, videoRef, onPrediction, onHandLost, onDetectingChange, onMotionStatusChange]);
+  }, [handLandmarker, videoRef, mode, onPrediction, onWordLandmarks, onHandLost, onDetectingChange, onMotionStatusChange]);
+
 
   useEffect(() => {
     detectRef.current = detect;

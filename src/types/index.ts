@@ -3,6 +3,19 @@ export interface Prediction {
   confidence: number;
 }
 
+export type AppMode = 'words' | 'alphabet';
+
+export const WORD_SIGNS = [
+  'Hi', 'Okay', 'Yes', 'No', 'Stop', 'Wait', 'Nice', 'To', 'Meet', 'You', 'Clear'
+] as const;
+
+export type WordSign = typeof WORD_SIGNS[number];
+
+export interface WordPrediction {
+  word: WordSign;
+  confidence: number;
+}
+
 export interface NormalizedLandmarks {
   /** 63 values (21 landmarks × 3 coordinates: x, y, z) */
   points: Float32Array;
@@ -39,3 +52,4 @@ export interface HandGeometry {
   /** Distance between thumb tip and middle tip, normalized */
   thumbMiddleDistance: number;
 }
+
